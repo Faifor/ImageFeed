@@ -83,7 +83,6 @@ final class WebViewViewController: UIViewController {
         progressView = UIProgressView(progressViewStyle: .default)
         progressView.translatesAutoresizingMaskIntoConstraints = false
         progressView.progressTintColor = UIColor(named: "ypBlack")
-        progressView.progress = 0.5
         view.addSubview(progressView)
         
         NSLayoutConstraint.activate([
@@ -102,7 +101,7 @@ final class WebViewViewController: UIViewController {
             URLQueryItem(name: "client_id", value: Constants.accessKey),
             URLQueryItem(name: "redirect_uri", value: Constants.redirectURI),
             URLQueryItem(name: "response_type", value: "code"),
-            URLQueryItem(name: "scope", value: Constants.accessScope)
+            URLQueryItem(name: "accessScope", value: Constants.accessScope)
         ]
         
         guard let url = urlComponents.url else {
