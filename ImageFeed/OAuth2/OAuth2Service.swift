@@ -12,6 +12,7 @@ final class OAuth2Service {
     private init() {}
     
     private let tokenStorage = OAuth2TokenStorage()
+    private let decoder = JSONDecoder()
     
     private func makeOAuthTokenRequest(code: String) -> URLRequest? {
         guard var urlComponents = URLComponents(string: "https://unsplash.com/oauth/token") else {
@@ -80,7 +81,7 @@ final class OAuth2Service {
             }
             
             do {
-                let tokenResponse = try JSONDecoder().decode(OAuthTokenResponseBody.self, from: data)
+                let tokenResponse = try self.decoder.decode(OAuthTokenResponseBody.self, from: data)
                 let token = tokenResponse.accessToken
                 self.tokenStorage.token = token
                 print("Access token received: \(token)")
