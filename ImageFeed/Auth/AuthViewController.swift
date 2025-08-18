@@ -51,11 +51,11 @@ extension AuthViewController: WebViewViewControllerDelegate {
         vc.dismiss(animated: true) { [weak self] in
             guard let self = self else { return }
             
-            ProgressHUD.animate()
+            UIBlockingProgressHUD.show()
             
             OAuth2Service.shared.fetchOAuthToken(code: code) { result in
                 
-                ProgressHUD.dismiss()
+                UIBlockingProgressHUD.dismiss()
                 switch result {
                 case .success(let token):
                     print("Токен получен: \(token)")

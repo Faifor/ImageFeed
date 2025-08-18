@@ -13,6 +13,9 @@ final class OAuth2Service {
     
     private let tokenStorage = OAuth2TokenStorage()
     private let decoder = JSONDecoder()
+    private let urlSession = URLSession.shared
+    private var task: URLSessionTask?
+    private var lastCode: String?
     
     private func makeOAuthTokenRequest(code: String) -> URLRequest? {
         guard var urlComponents = URLComponents(string: "https://unsplash.com/oauth/token") else {
@@ -37,6 +40,14 @@ final class OAuth2Service {
     }
     
     func fetchOAuthToken(code: String, completion: @escaping (Result<String, Error>) -> Void) {
+        assert(Thread.isMainThread)
+        guard lastCode != code else {
+            completion(.failure(NetworkError.invalidRequest))
+            return
+        }
+        task?.cancel()
+        lastCode = code
+        
         guard let request = makeOAuthTokenRequest(code: code) else {
             completion(.failure(NetworkError.invalidRequest))
             return
@@ -94,9 +105,11 @@ final class OAuth2Service {
                 DispatchQueue.main.async {
                     completion(.failure(NetworkError.decodingError(error)))
                 }
+                self.task = nil
+                self.lastCode = nil
             }
         }
-        
+        self.task = task
         task.resume()
     }
 }
