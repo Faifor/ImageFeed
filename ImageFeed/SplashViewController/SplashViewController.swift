@@ -10,7 +10,7 @@ import UIKit
 final class SplashViewController: UIViewController {
     private let showAuthenticationScreenSegueIdentifier = "ShowAuthenticationScreen"
     
-    private let storage = OAuth2TokenStorage()
+    private let storage = OAuth2TokenStorage.shared
     private let profileService = ProfileService.shared
     
     override func viewDidAppear(_ animated: Bool) {
@@ -52,10 +52,11 @@ final class SplashViewController: UIViewController {
             guard let self = self else { return }
 
             switch result {
-            case .success:
+            case let .success(profile):
+                ProfileImageService.shared.fetchProfileImageURL(username: profile.username) { _ in }
                 self.switchToTabBarController()
 
-            case .failure(let error):
+            case let .failure(error):
                 print("Failed to fetch profile: \(error)")
                 break
             }

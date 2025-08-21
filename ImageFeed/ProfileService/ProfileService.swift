@@ -42,23 +42,20 @@ final class ProfileService {
             completion(.failure(URLError(.badURL)))
             return
         }
-        let task = urlSession.data(for: request) { [weak self] result in
+        let task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<ProfileResult, Error>) in
             switch result {
-            case .success(let data):
-                do {
-                    let profileResult = try JSONDecoder().decode(ProfileResult.self, from: data)
-                    
+            case .success(let result):
+                                    
                     let profile = Profile(
-                        username: profileResult.username,
-                        name: profileResult.firstName,
-                        loginName: "@\(profileResult.username)",
-                        bio: profileResult.bio
+                        username: result.username,
+                        name: "\(result.firstName) \(result.lastName)"
+                            .trimmingCharacters(in: .whitespaces),
+                        loginName: "@\(result.username)",
+                        bio: result.bio
                     )
                     self?.profile = profile
                     completion(.success(profile))
-                } catch {
-                    completion(.failure(error))
-                }
+                
             case .failure(let error):
                 completion(.failure(error))
             }
