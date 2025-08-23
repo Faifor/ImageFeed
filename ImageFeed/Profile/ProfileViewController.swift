@@ -102,7 +102,7 @@ final class ProfileViewController: UIViewController {
         
         let placeholderImage = UIImage(systemName: "person.circle.fill")?
             .withTintColor(.lightGray, renderingMode: .alwaysOriginal)
-            .withConfiguration(UIImage.SymbolConfiguration(pointSize: 70, weight: .regular, scale: .large))
+            .withConfiguration(UIImage.SymbolConfiguration(pointSize: 5, weight: .regular, scale: .large))
         
         let processor = RoundCornerImageProcessor(cornerRadius: 35)
         avatarImageView.kf.indicatorType = .activity
