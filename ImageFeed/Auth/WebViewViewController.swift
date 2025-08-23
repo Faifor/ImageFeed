@@ -27,21 +27,15 @@ final class WebViewViewController: UIViewController {
         super.viewDidLoad()
         
         loadWebView()
-        
         loadProgressView()
-       
         loadAuthView()
-        
-        
-        
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
         estimatedProgressObservation = webView.observe(
             \.estimatedProgress,
-            options: [],
+             options: [],
              changeHandler: { [weak self] _, _ in
                  guard let self = self else { return }
                  self.updateProgress()
@@ -148,7 +142,4 @@ extension WebViewViewController: WKNavigationDelegate {
             return nil
         }
     }
-    
-    
-    
 }

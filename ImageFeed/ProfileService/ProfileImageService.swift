@@ -8,9 +8,9 @@
 import Foundation
 
 struct ProfileImage: Codable {
-    let small: String
-    let medium: String
-    let large: String
+    let small: String?
+    let medium: String?
+    let large: String?
     
     private enum CodingKeys: String, CodingKey {
         case small
@@ -20,7 +20,7 @@ struct ProfileImage: Codable {
 }
 
 struct UserResult: Codable {
-    let profileImage: ProfileImage
+    let profileImage: ProfileImage?
     
     private enum CodingKeys: String, CodingKey {
         case profileImage = "profile_image"
@@ -33,7 +33,7 @@ final class ProfileImageService {
     static let shared = ProfileImageService()
     private init() {}
     
-    private(set) var avatarURL: String?
+    private(set) var avatarURL: String? 
     
     private var task: URLSessionTask?
     
@@ -55,8 +55,8 @@ final class ProfileImageService {
             case .success(let result):
                 guard let self = self else { return }
                     
-                    self.avatarURL = result.profileImage.small
-                    completion(.success(result.profileImage.small))
+                self.avatarURL = result.profileImage?.small
+                completion(.success(result.profileImage?.small ?? ""))
                     NotificationCenter.default
                         .post(
                             name: ProfileImageService.didChangeNotification,

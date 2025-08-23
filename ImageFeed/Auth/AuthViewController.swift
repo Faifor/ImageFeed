@@ -48,7 +48,7 @@ final class AuthViewController: UIViewController {
 extension AuthViewController: WebViewViewControllerDelegate {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
         
-        vc.dismiss(animated: true)
+        
         
         UIBlockingProgressHUD.show()
         
@@ -57,10 +57,13 @@ extension AuthViewController: WebViewViewControllerDelegate {
                 guard let self else { return }
                 switch result {
                 case .success:
+                    vc.dismiss(animated: true)
                     self.delegate?.didAuthenticate(self)
+                    
                 case let .failure(error):
                     print("Ошибка при аутентификации: \(error.localizedDescription)")
                     self.showAuthErrorAlert()
+                    vc.dismiss(animated: true)
                 }
             }
         }

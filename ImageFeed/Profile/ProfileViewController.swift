@@ -20,10 +20,12 @@ final class ProfileViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupViews()
         
         if let profile = ProfileService.shared.profile {
             updateProfileDetails(profile: profile)
         }
+        
         profileImageServiceObserver = NotificationCenter.default
             .addObserver(
                 forName: ProfileImageService.didChangeNotification,
@@ -33,7 +35,7 @@ final class ProfileViewController: UIViewController {
                 guard let self = self else { return }
                 self.updateAvatar()
             }
-        setupViews()
+        
         updateAvatar()
     }
     

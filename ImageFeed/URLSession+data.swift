@@ -50,8 +50,8 @@ extension URLSession {
         completion: @escaping (Result<T, Error>) -> Void
     ) -> URLSessionTask {
         let decoder = JSONDecoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-        
+//        decoder.keyDecodingStrategy = .convertFromSnakeCase
+
         let task = data(for: request) { (result: Result<Data, Error>) in
             switch result {
             case .success(let data):
@@ -59,8 +59,8 @@ extension URLSession {
                     print("Полученные данные: \(jsonString)")
                 }
                 do {
-                    let decodetObject = try decoder.decode(T.self, from: data)
-                    completion(.success(decodetObject))
+                    let decodedObject = try decoder.decode(T.self, from: data)
+                    completion(.success(decodedObject))
                 } catch {
                     if let decodingError = error as? DecodingError {
                         print("Ошибка декодирования: \(decodingError), Данные: \(String(data: data, encoding: .utf8) ?? "")")
@@ -69,6 +69,7 @@ extension URLSession {
                     }
                     completion(.failure(error))
                 }
+
             case .failure(let error):
                 print("Ошибка запроса: \(error.localizedDescription)")
                 completion(.failure(error))

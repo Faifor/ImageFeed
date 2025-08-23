@@ -5,7 +5,11 @@
 //  Created by Данила Спиридонов on 05.08.2025.
 //
 
-import UIKit
+import Foundation
+
+enum AuthServiceError: Error {
+    case invalidRequest
+}
 
 final class OAuth2Service {
     static let shared = OAuth2Service()
@@ -63,7 +67,7 @@ final class OAuth2Service {
     func fetchOAuthToken(_ code: String, completion: @escaping (Result<String, Error>) -> Void) {
         assert(Thread.isMainThread)
         guard lastCode != code else {
-            completion(.failure(NetworkError.invalidRequest))
+            completion(.failure(AuthServiceError.invalidRequest))
             return
         }
         task?.cancel()
@@ -72,7 +76,7 @@ final class OAuth2Service {
         guard
             let request = makeOAuthTokenRequest(code: code)
         else {
-            completion(.failure(NetworkError.invalidRequest))
+            completion(.failure(AuthServiceError.invalidRequest))
             return
         }
         
@@ -107,6 +111,7 @@ final class OAuth2Service {
 extension OAuth2Service {
     private func object(for request: URLRequest, completion: @escaping (Result<OAuthTokenResponseBody, Error>) -> Void) -> URLSessionTask {
         let decoder = JSONDecoder()
+//        decoder.keyDecodingStrategy = .convertFromSnakeCase
         return urlSession.data(for: request) { (result: Result<Data, Error>) in
             switch result {
             case .success(let data):
