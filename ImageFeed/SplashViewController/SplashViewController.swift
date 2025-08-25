@@ -13,7 +13,7 @@ final class SplashViewController: UIViewController {
     private let storage = OAuth2TokenStorage.shared
     private let profileService = ProfileService.shared
     
-    var imageView: UIImageView!
+    private var imageView: UIImageView!
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -35,6 +35,8 @@ final class SplashViewController: UIViewController {
     }
     
     private func setupImageView() {
+        view.backgroundColor = UIColor(named: "ypBlack")
+
         let imageSplashScreenLogo = UIImage(named: "splashScreenLogo")
         imageView = UIImageView(image: imageSplashScreenLogo)
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -48,7 +50,7 @@ final class SplashViewController: UIViewController {
     
     private func presentAuthViewController() {
         let storyboard = UIStoryboard(name: "Main", bundle: .main)
-        guard let authViewController = storyboard.instantiateViewController(identifier: "AuthViewController") as? AuthViewController else {
+        guard let authViewController = storyboard.instantiateViewController(withIdentifier: "AuthViewController") as? AuthViewController else {
             assertionFailure("Не удалось найти AuthViewController по идентификатору")
             return
         }
