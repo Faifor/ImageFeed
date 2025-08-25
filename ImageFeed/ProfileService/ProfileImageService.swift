@@ -55,8 +55,8 @@ final class ProfileImageService {
             case .success(let result):
                 guard let self = self else { return }
                     
-                self.avatarURL = result.profileImage?.small
-                completion(.success(result.profileImage?.small ?? ""))
+                self.avatarURL = result.profileImage?.large
+                completion(.success(result.profileImage?.large ?? ""))
                     NotificationCenter.default
                         .post(
                             name: ProfileImageService.didChangeNotification,
