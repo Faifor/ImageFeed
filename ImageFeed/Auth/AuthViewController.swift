@@ -4,6 +4,7 @@
 //
 //  Created by Данила Спиридонов on 01.08.2025.
 //
+import ProgressHUD
 import UIKit
 
 protocol AuthViewControllerDelegate: AnyObject {
@@ -46,22 +47,50 @@ final class AuthViewController: UIViewController {
 
 extension AuthViewController: WebViewViewControllerDelegate {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
-        vc.dismiss(animated: true)
-        OAuth2Service.shared.fetchOAuthToken(code: code) { result in
-            switch result {
-            case .success(let token):
-                print("Токен получен: \(token)")
-                DispatchQueue.main.async {
+        
+        
+        
+        UIBlockingProgressHUD.show()
+        
+            fetchOAuthToken(code) { [weak self] result in
+                UIBlockingProgressHUD.dismiss()
+                guard let self else { return }
+                switch result {
+                case .success:
+                    vc.dismiss(animated: true)
                     self.delegate?.didAuthenticate(self)
+                    
+                case let .failure(error):
+                    print("Ошибка при аутентификации: \(error.localizedDescription)")
+                    self.showAuthErrorAlert()
+                    vc.dismiss(animated: true)
                 }
-            case .failure(let error):
-                print("Ошибка при получении токена: \(error)")
             }
         }
-    }
-    
     func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
         vc.dismiss(animated: true)
     }
 }
+    
+extension AuthViewController {
+    private func fetchOAuthToken(_ code: String, completion: @escaping (Result<String, Error>) -> Void) {
+        oauth2Service.fetchOAuthToken(code) { result in
+            completion(result)
+        }
+    }
+}
 
+extension AuthViewController {
+    func showAuthErrorAlert() {
+        let alertController = UIAlertController(
+            title: "Что-то пошло не так",
+            message: "Не удалось войти в систему",
+            preferredStyle: .alert
+        )
+        let okAction = UIAlertAction(title: "Ок", style: .default, handler: nil)
+        alertController.addAction(okAction)
+        present(alertController, animated: true, completion: nil)
+    }
+}
+    
+   
