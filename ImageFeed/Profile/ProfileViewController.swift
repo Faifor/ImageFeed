@@ -40,6 +40,8 @@ final class ProfileViewController: UIViewController {
     }
     
     private func setupViews() {
+        view.backgroundColor = UIColor(named: "ypBlack")
+        
         let profileImage = UIImage(named: "userpickPhoto")
         avatarImageView.image = profileImage
         avatarImageView.translatesAutoresizingMaskIntoConstraints = false
